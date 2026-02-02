@@ -5,13 +5,13 @@ import { refreshUserData } from "@/entities/user/model";
 import { useAppDispatch } from "@/shared/lib/hooks/redux";
 
 function App() {
-	const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-	useEffect(() => {
-		dispatch(refreshUserData());
-	}, []);
+  useEffect(() => {
+    dispatch(refreshUserData());
+  }, []);
 
-	return <AppRouter />;
+  return <AppRouter />;
 }
 
 export default App;
