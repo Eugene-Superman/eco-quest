@@ -1,12 +1,13 @@
 export type UserRole = "admin" | "moderator" | "participant" | "visitor";
 
 export interface IUser {
-	fullname: string;
+	fullname?: string;
 	nickname: string;
+	email: string;
 	role: UserRole;
 }
 
-export interface UserLoginData {
+export interface UserAccessData {
 	user: IUser;
 	accessToken: string | null;
 }
