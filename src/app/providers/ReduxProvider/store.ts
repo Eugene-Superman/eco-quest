@@ -1,8 +1,11 @@
-import { userReducer } from "@/entities/user/model";
-import { configureStore } from "@reduxjs/toolkit";
+import { tokenListenerMiddleware } from '@/app/middlewares';
+import { userReducer } from '@/entities/user/model';
+import { configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({
-	reducer: { user: userReducer },
+  reducer: { user: userReducer },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(tokenListenerMiddleware.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
