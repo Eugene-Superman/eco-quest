@@ -1,0 +1,4 @@
+export const CONSTANTS = {
+  MAX_REFETCH_ATTEMPTS: 3,
+  BASE_TIMEOUT: 500,
+};

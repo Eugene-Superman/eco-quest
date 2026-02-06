@@ -1,5 +1,5 @@
-const MAX_REFETCH_ATTEMPTS = 3;
-const BASE_TIMEOUT = 500;
+import { CONSTANTS } from './constants';
+
 const SERVER_ERROR = 'ServerError';
 
 const setRequestKey = (url: string, body?: BodyInit | null) => {
@@ -72,14 +72,14 @@ export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt: nu
       if (
         error instanceof Error &&
         error.cause === SERVER_ERROR &&
-        attempt < MAX_REFETCH_ATTEMPTS
+        attempt < CONSTANTS.MAX_REFETCH_ATTEMPTS
       ) {
         const newAttemptCount = attempt + 1;
         console.warn(error.message);
         console.info(`Attempting refetch №${newAttemptCount}: ${url}`);
 
         await new Promise((resolve) =>
-          setTimeout(() => resolve(null), BASE_TIMEOUT * 2 ** attempt),
+          setTimeout(() => resolve(null), CONSTANTS.BASE_TIMEOUT * 2 ** attempt),
         );
         return fetchRequest(url, init, newAttemptCount);
       }
