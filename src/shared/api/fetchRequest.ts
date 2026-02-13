@@ -31,7 +31,7 @@ const setRequestKey = (url: string, body?: BodyInit | null) => {
 };
 const abortControllerTable: Record<string, AbortController> = {};
 
-export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt: number = 0) {
+export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0) {
   const requestKey = setRequestKey(url, init?.body);
 
   if (abortControllerTable[requestKey]) {
@@ -70,8 +70,7 @@ export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt: nu
       }
 
       if (
-        error instanceof Error &&
-        error.cause === SERVER_ERROR &&
+        ((error instanceof Error && error.cause === SERVER_ERROR) || error instanceof TypeError) &&
         attempt < CONSTANTS.MAX_REFETCH_ATTEMPTS
       ) {
         const newAttemptCount = attempt + 1;
