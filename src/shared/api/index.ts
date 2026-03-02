@@ -1,3 +1,4 @@
 export * from './requestImitation';
-export * from './fetchRequest';
+export * from './fetch/fetchRequest';
+export * from './fetch/fetchAuthorized';
 export * from './accessTokenProvider';

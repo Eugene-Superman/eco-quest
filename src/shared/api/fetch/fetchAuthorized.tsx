@@ -1,5 +1,5 @@
 import { fetchRequest } from './fetchRequest';
-import { accessTokenProvider } from './accessTokenProvider';
+import { accessTokenProvider } from '../accessTokenProvider';
 
 export function fetchAuthorized(url: string, init: RequestInit = {}) {
   const token = accessTokenProvider.getToken();

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { fetchRequest } from './fetchRequest';
-import { CONSTANTS } from './constants';
-import { muteConsole } from '../lib/test';
+import { CONSTANTS } from '../constants';
+import { muteConsole } from '../../lib/test';
 
 vi.stubGlobal('fetch', vi.fn());
 

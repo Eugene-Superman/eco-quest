@@ -1,9 +1,4 @@
-import { CONSTANTS } from './constants';
-const MAX_SEND_QUEUE = 50;
-const HEART_BEAT_INTERVAL = 60000;
-const PONG_TIMEOUT = 10000;
-const HEARTBEAT_PING = JSON.stringify({ type: 'ping' });
-
+import { CONSTANTS } from '../constants';
 type SocketEvent = keyof WebSocketEventMap;
 
 type SocketState =
@@ -63,7 +58,7 @@ class SocketClient {
     return this.#state === 'open';
   }
   isConnecting() {
-    return this.#state === 'connecting';
+    return this.#state === 'connecting' || this.#state === 'reconnecting';
   }
   open() {
     if (this.isOpened() || this.isConnecting()) {
@@ -71,6 +66,7 @@ class SocketClient {
     }
     this.#setState('connecting');
     this.#websocket = new WebSocket(this.#url);
+
     this.#websocket.addEventListener('open', () => {
       this.#eventHandlers.open.forEach((handler) => handler());
 
@@ -127,11 +123,11 @@ class SocketClient {
   #startPing() {
     this.#stopPing();
     this.#pingInterval = setInterval(() => {
-      this.send(HEARTBEAT_PING);
+      this.send(CONSTANTS.HEARTBEAT_PING);
 
       this.#clearPongTimeout();
-      this.#pongTimeout = setTimeout(() => this.#onPingTimeout(), PONG_TIMEOUT);
-    }, HEART_BEAT_INTERVAL);
+      this.#pongTimeout = setTimeout(() => this.#onPingTimeout(), CONSTANTS.PONG_TIMEOUT);
+    }, CONSTANTS.HEART_BEAT_INTERVAL);
   }
   #stopPing() {
     if (this.#pingInterval) {
@@ -161,7 +157,7 @@ class SocketClient {
   }
   send(message: string) {
     if (!this.isOpened()) {
-      if (this.#sendQueue.length >= MAX_SEND_QUEUE) {
+      if (this.#sendQueue.length >= CONSTANTS.MAX_SEND_QUEUE) {
         this.#sendQueue.shift();
       }
       return this.#sendQueue.push(message);
