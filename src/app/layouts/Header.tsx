@@ -1,15 +1,17 @@
-import type { UserRole } from "@/entities/user/model";
-import logo from "@/shared/assets/react.svg";
-import { ROUTES } from "@/shared/config";
-import { Link } from "react-router";
+import type { UserRole } from '@/entities/user/model';
+import logo from '@/shared/assets/react.svg';
+import { ROUTES } from '@/shared/config';
+import { Link } from 'react-router';
+
+const home = { path: ROUTES.HOME, title: 'Home' };
 
 const navItems = {
-  admin: [{ path: ROUTES.HOME, title: "Home" }],
-  moderator: [{ path: ROUTES.HOME, title: "Home" }],
-  participant: [{ path: ROUTES.HOME, title: "Home" }],
+  admin: [home],
+  moderator: [home],
+  participant: [home],
   visitor: [
-    { path: ROUTES.LOGIN, title: "Login" },
-    { path: ROUTES.SIGN_UP, title: "Sign Up" },
+    { path: ROUTES.LOGIN, title: 'Login' },
+    { path: ROUTES.SIGN_UP, title: 'Sign Up' },
   ],
 };
 

@@ -6,7 +6,7 @@ import { refreshUserData } from './thunks';
 const initialState: UserState = {
   user: null,
   accessToken: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 export const userSlice = createSlice({
