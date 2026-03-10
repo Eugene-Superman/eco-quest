@@ -33,6 +33,10 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, setAccessToken, resetAll } = userSlice.actions;
+export const {
+  setUser: setUserToStore,
+  setAccessToken: setAccessTokenToStore,
+  resetAll: resetAllUserStore,
+} = userSlice.actions;
 
 export default userSlice.reducer;

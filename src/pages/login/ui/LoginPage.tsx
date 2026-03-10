@@ -1,30 +1,15 @@
-import { InputField } from '@/shared/lib/forms/InputField';
-import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
-
-interface IFormInput {
-  email: string;
-  password: string;
-}
+import LoginForm from '@/features/auth/login/LoginForm';
+import { ROUTES } from '@/shared/config';
+import { useNavigate } from 'react-router';
 
 export default function LoginPage() {
-  const methods = useForm<IFormInput>({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const navigate = useNavigate();
+  const redirectToHome = () => navigate(ROUTES.HOME);
 
   return (
     <div>
-      <FormProvider {...methods}>
-        <h2>Log in</h2>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <InputField label="Email" name="email" type="email" autoComplete="email" required />
-          <InputField type="password" label="Password" name="password" required />
-          <button type="submit">Log in</button>
-        </form>
-      </FormProvider>
+      <h2>Log in</h2>
+      <LoginForm onSubmitSuccess={redirectToHome} />
     </div>
   );
 }

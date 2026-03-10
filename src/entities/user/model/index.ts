@@ -1,8 +1,8 @@
-export * from "./userTypes";
-export * from "./thunks";
+export * from './userTypes';
+export * from './thunks';
 export {
-	default as userReducer,
-	setUser,
-	setAccessToken,
-	resetAll,
-} from "./userSlice";
+  default as userReducer,
+  setUserToStore,
+  setAccessTokenToStore,
+  resetAllUserStore,
+} from './userSlice';
