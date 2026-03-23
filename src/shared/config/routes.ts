@@ -5,4 +5,6 @@ export const ROUTES = {
   FORBIDDEN: '/forbidden',
   DASHBOARD: '/dashboard',
   ADMIN: '/admin',
+  CHALLENGES: '/challenges',
+  CHALLENGE_DETAILS: (id = ':id') => '/challenge-details/' + id,
 };

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { requestImitation } from '@/shared/api';
 import { type UserRole } from '@/entities/user/model';
 import { setAccessTokenToStore, setUserToStore } from '@/entities/user/model/userSlice';
-import { useDispatch } from 'react-redux';
 import type { ISignupForm } from './signupTypes';
+import { useAppDispatch } from '@/shared/lib/hooks/redux';
 
 const mockUserState = {
   user: {
@@ -18,7 +18,7 @@ const mockUserState = {
 export default function useSignup(onSubmitSuccess?: () => void) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const signupRequest = async (formData: Omit<ISignupForm, 'repeatPassword'>) => {
     setIsLoading(true);

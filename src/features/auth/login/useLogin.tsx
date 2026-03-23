@@ -3,7 +3,7 @@ import type { ILoginForm } from './loginTypes';
 import { requestImitation } from '@/shared/api';
 import { type UserRole } from '@/entities/user/model';
 import { setAccessTokenToStore, setUserToStore } from '@/entities/user/model/userSlice';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '@/shared/lib/hooks/redux';
 
 const mockUserState = {
   user: {
@@ -17,7 +17,7 @@ const mockUserState = {
 
 export default function useLogin(onSubmitSuccess?: () => void) {
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const loginRequest = async (formData: ILoginForm) => {
     setIsLoading(true);

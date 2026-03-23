@@ -4,14 +4,16 @@ import { ROUTES } from '@/shared/config';
 import { Link } from 'react-router';
 
 const home = { path: ROUTES.HOME, title: 'Home' };
+const challenges = { path: ROUTES.CHALLENGES, title: 'Challenges' };
 
 const navItems = {
-  admin: [home],
-  moderator: [home],
-  participant: [home],
+  admin: [home, challenges],
+  moderator: [home, challenges],
+  participant: [home, challenges],
   visitor: [
     { path: ROUTES.LOGIN, title: 'Login' },
     { path: ROUTES.SIGN_UP, title: 'Sign Up' },
+    challenges,
   ],
 };
 

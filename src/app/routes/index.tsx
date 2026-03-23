@@ -12,6 +12,8 @@ import {
 } from '@/pages';
 import type { UserRole } from '@/entities/user/model';
 import { store } from '../providers/ReduxProvider/store';
+import ChallengesPage from '@/pages/challenges/catalog/ui/ChallengesPage';
+import DetailedPage from '@/pages/challenges/detailed/DetailedPage';
 
 function loadWithLimitedRoles(rolesWithAccess: UserRole[]) {
   return function () {
@@ -31,6 +33,8 @@ const router = createBrowserRouter([
       { path: ROUTES.LOGIN, element: <LoginPage /> },
       { path: ROUTES.SIGN_UP, element: <SignupPage /> },
       { path: ROUTES.DASHBOARD, element: <DashboardPage /> },
+      { path: ROUTES.CHALLENGES, element: <ChallengesPage /> },
+      { path: ROUTES.CHALLENGE_DETAILS(), element: <DetailedPage /> },
       { path: ROUTES.ADMIN, element: <AdminPage />, loader: loadWithLimitedRoles(['admin']) },
       { path: ROUTES.FORBIDDEN, element: <ForbiddenPage /> },
       { path: '*', element: <NotFoundPage /> },
