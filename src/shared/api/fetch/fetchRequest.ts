@@ -2,53 +2,10 @@ import { CONSTANTS } from '../constants';
 
 const SERVER_ERROR = 'ServerError';
 
-const setRequestKey = (url: string, body?: BodyInit | null) => {
-  if (!body) {
-    return url;
-  }
-
-  if (body instanceof Blob) {
-    return url + '-blob-size-' + body.size;
-  }
-
-  if (body instanceof FormData) {
-    return url + '-' + JSON.stringify([...body.entries()]);
-  }
-
-  if (typeof body === 'string') {
-    return url + '-' + body;
-  }
-
-  if (typeof body === 'object') {
-    try {
-      return url + '-' + JSON.stringify(body);
-    } catch {
-      return url;
-    }
-  }
-
-  return url;
-};
-const abortControllerTable: Record<string, AbortController> = {};
-
 export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0) {
-  const requestKey = setRequestKey(url, init?.body);
-
-  if (abortControllerTable[requestKey]) {
-    abortControllerTable[requestKey].abort();
-  }
-
-  const controller = new AbortController();
-  const signal = controller.signal;
-
-  abortControllerTable[requestKey] = controller;
-
   const requestData = async (): Promise<T | undefined> => {
     try {
-      const response = await fetch(url, {
-        signal,
-        ...init,
-      });
+      const response = await fetch(url, init);
 
       if (!response.ok) {
         throw new Error(
@@ -85,10 +42,6 @@ export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0
 
       console.warn(error);
       throw error;
-    } finally {
-      if (abortControllerTable[requestKey] === controller) {
-        delete abortControllerTable[requestKey];
-      }
     }
   };
 

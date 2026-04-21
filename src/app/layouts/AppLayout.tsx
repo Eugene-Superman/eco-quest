@@ -1,8 +1,8 @@
 import { useAppSelector } from '@/shared/lib/hooks/redux';
 import { Footer } from './Footer';
 import { Header } from './Header';
-import { Loader } from '@/shared/ui';
 import { Outlet } from 'react-router';
+import NotificationList from '@/widgets/NotificationList/NotificationList';
 
 function AdminLayout() {
   return (
@@ -56,7 +56,10 @@ export default function AppLayout() {
   return (
     <>
       <Header userRole={userRole} />
-      <main>{getLayout()}</main>
+      <main>
+        {getLayout()}
+        <NotificationList />
+      </main>
       <Footer />
     </>
   );

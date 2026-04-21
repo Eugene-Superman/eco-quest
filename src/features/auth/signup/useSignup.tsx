@@ -1,44 +1,27 @@
 import { useState } from 'react';
 import { requestImitation } from '@/shared/api';
-import { type UserRole } from '@/entities/user/model';
+import { type UserAccessData, type UserRole } from '@/entities/user/model';
 import { setAccessTokenToStore, setUserToStore } from '@/entities/user/model/userSlice';
 import type { ISignupForm } from './signupTypes';
 import { useAppDispatch } from '@/shared/lib/hooks/redux';
+import useMutationRequest from '@/shared/api/hooks/useMutationRequest';
 
-const mockUserState = {
-  user: {
-    fullname: 'Test Smith',
-    nickname: 'Quasimodo',
-    email: 'test@test.test',
-    role: 'participant' as UserRole,
-  },
-  accessToken: 'test-token',
-};
-
-export default function useSignup(onSubmitSuccess?: () => void) {
-  const [isLoading, setIsLoading] = useState(false);
-
+export default function useSignup() {
   const dispatch = useAppDispatch();
 
-  const signupRequest = async (formData: Omit<ISignupForm, 'repeatPassword'>) => {
-    setIsLoading(true);
-
-    try {
-      const result = await requestImitation(mockUserState);
-      if (!result) {
-        throw new Error('Registration Error');
-      }
-
-      dispatch(setUserToStore(result.user));
-      dispatch(setAccessTokenToStore(result.accessToken));
-
-      onSubmitSuccess?.();
-    } catch (error) {
-      console.log('error', error);
-    } finally {
-      setIsLoading(false);
+  const saveUser = (accessData?: UserAccessData) => {
+    if (!accessData) {
+      return;
     }
+    dispatch(setUserToStore(accessData.user));
+    dispatch(setAccessTokenToStore(accessData.accessToken));
   };
 
-  return { isLoading, signupRequest };
+  const { isLoading, mutate } = useMutationRequest<UserAccessData>(
+    'signup',
+    { method: 'POST' },
+    saveUser,
+  );
+
+  return { isLoading, mutate };
 }
