@@ -1,4 +1,4 @@
-import { refreshUserData } from '@/entities/user/model';
+import { refreshUserData } from '@/entities/user';
 import { accessTokenProvider } from '@/shared/api/accessTokenProvider';
 import { createListenerMiddleware } from '@reduxjs/toolkit';
 

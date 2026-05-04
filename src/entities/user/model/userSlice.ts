@@ -1,12 +1,10 @@
-import type { IUser, UserState } from '@/entities/user/model';
+import type { IUser, UserState } from '@/entities/user';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { refreshUserData } from './thunks';
 
 const initialState: UserState = {
   user: null,
-  accessToken: null,
-  isLoading: true,
 };
 
 export const userSlice = createSlice({
@@ -16,27 +14,15 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
-    setAccessToken: (state, action: PayloadAction<string | null>) => {
-      state.accessToken = action.payload;
-    },
     resetAll: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(refreshUserData.pending, (state) => {
-      state.isLoading = true;
-    });
     builder.addCase(refreshUserData.fulfilled, (state, action) => {
       state.user = action.payload.user;
-      state.accessToken = action.payload.accessToken;
-      state.isLoading = false;
     });
   },
 });
 
-export const {
-  setUser: setUserToStore,
-  setAccessToken: setAccessTokenToStore,
-  resetAll: resetAllUserStore,
-} = userSlice.actions;
+export const { setUser: setUserToStore, resetAll: resetAllUserStore } = userSlice.actions;
 
 export default userSlice.reducer;

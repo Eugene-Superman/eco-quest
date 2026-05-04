@@ -10,7 +10,7 @@ import {
   AdminPage,
   ForbiddenPage,
 } from '@/pages';
-import type { UserRole } from '@/entities/user/model';
+import type { UserRole } from '@/entities/user';
 import { store } from '../providers/ReduxProvider/store';
 import ChallengesPage from '@/pages/challenges/catalog/ui/ChallengesPage';
 import DetailedPage from '@/pages/challenges/detailed/DetailedPage';

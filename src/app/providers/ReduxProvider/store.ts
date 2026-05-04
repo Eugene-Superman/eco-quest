@@ -1,6 +1,6 @@
 import { tokenListenerMiddleware } from '@/app/middlewares';
 import { notificationReducer } from '@/entities/notifications';
-import { userReducer } from '@/entities/user/model';
+import { userReducer } from '@/entities/user';
 import { challengesReducer } from '@/pages/challenges/model';
 import { configureStore } from '@reduxjs/toolkit';
 

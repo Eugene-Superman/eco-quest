@@ -1,4 +1,4 @@
-import type { UserRole } from '@/entities/user/model';
+import type { UserRole } from '@/entities/user';
 import logo from '@/shared/assets/react.svg';
 import { ROUTES } from '@/shared/config';
 import { Link } from 'react-router';

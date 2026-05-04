@@ -3,7 +3,7 @@ import { CONSTANTS } from '../constants';
 const SERVER_ERROR = 'ServerError';
 
 export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0) {
-  const requestData = async (): Promise<T | undefined> => {
+  const requestData = async (): Promise<T> => {
     try {
       const response = await fetch(url, init);
 
@@ -15,7 +15,7 @@ export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0
       }
 
       if (response.status === 204) {
-        return;
+        return undefined as T;
       }
 
       const parsedResponse = await response.json();

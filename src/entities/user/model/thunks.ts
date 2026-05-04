@@ -9,7 +9,6 @@ const mockUserState: UserAccessData = {
     email: 'test@test.test',
     role: 'participant',
   },
-  accessToken: 'test-token',
 };
 
 const guestUserState: UserAccessData = {
@@ -18,7 +17,6 @@ const guestUserState: UserAccessData = {
     email: '-',
     role: 'visitor',
   },
-  accessToken: null,
 };
 
 export const refreshUserData = createAsyncThunk('user/refresh-token', async (_, api) => {

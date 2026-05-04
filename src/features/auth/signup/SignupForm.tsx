@@ -3,7 +3,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField, type InputFieldProps } from '@/shared/lib/forms';
 import { signupSchema } from '../schema';
 import type { ISignupForm } from './signupTypes';
-import useSignup from './useSignup';
+import { authApi } from '../authApi';
+import useAuth from '../useAuth';
 
 const fieldsList: InputFieldProps<ISignupForm>[] = [
   {
@@ -42,9 +43,9 @@ export default function SignupForm({ onSubmitSuccess }: Props) {
       repeatPassword: '',
     },
   });
-  const { isLoading, signupRequest } = useSignup(onSubmitSuccess);
 
-  const onSubmit: SubmitHandler<ISignupForm> = ({ repeatPassword, ...data }) => signupRequest(data);
+  const { isLoading, mutate } = useAuth(authApi.signup, onSubmitSuccess);
+  const onSubmit: SubmitHandler<ISignupForm> = ({ repeatPassword, ...data }) => mutate(data);
 
   return (
     <FormProvider {...methods}>

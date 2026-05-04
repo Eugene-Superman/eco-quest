@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
-import { fetchRequest } from '@/shared/api';
 import { useAppDispatch } from '@/shared/lib/hooks/redux';
 import { addNotification } from '@/entities/notifications';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 export const parseFetchError = (error: unknown) => {
   if (
@@ -18,13 +15,12 @@ export const parseFetchError = (error: unknown) => {
   }
 };
 
-export default function useRequest<T>(
-  url: string,
-  init: RequestInit,
-  onSubmitSuccess?: (response?: T) => void,
+export default function useRequest<TResponse>(
+  requestCallback: () => Promise<TResponse>,
+  onSubmitSuccess?: (response?: TResponse) => void,
 ) {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<T>();
+  const [data, setData] = useState<TResponse>();
 
   const dispatch = useAppDispatch();
 
@@ -35,7 +31,7 @@ export default function useRequest<T>(
       setIsLoading(true);
 
       try {
-        const result = await fetchRequest<T>(`${API_URL}/${url}`, init);
+        const result = await requestCallback();
 
         setData(result);
 
@@ -50,7 +46,7 @@ export default function useRequest<T>(
     requestData();
 
     return () => controller.abort();
-  }, [url, init]);
+  }, []);
 
   return { isLoading, data };
 }

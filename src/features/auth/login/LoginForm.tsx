@@ -1,9 +1,10 @@
 import { InputField } from '@/shared/lib/forms/InputField';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 import type { ILoginForm } from './loginTypes';
-import useLogin from './useLogin';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../schema';
+import { authApi } from '../authApi';
+import useAuth from '../useAuth';
 
 interface Props {
   onSubmitSuccess?: () => void;
@@ -17,9 +18,9 @@ export default function LoginForm({ onSubmitSuccess }: Props) {
       password: '',
     },
   });
-  const { isLoading, loginRequest } = useLogin(onSubmitSuccess);
 
-  const onSubmit: SubmitHandler<ILoginForm> = (data) => loginRequest(data);
+  const { isLoading, mutate } = useAuth(authApi.signin, onSubmitSuccess);
+  const onSubmit: SubmitHandler<ILoginForm> = (data) => mutate(data);
 
   return (
     <FormProvider {...methods}>
