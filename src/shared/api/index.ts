@@ -5,3 +5,4 @@ export * from './accessTokenProvider';
 export * from './requestState';
 export * from './hooks/useMutationRequest';
 export * from './hooks/useRequest';
+export * from './FetchError';

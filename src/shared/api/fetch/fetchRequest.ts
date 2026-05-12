@@ -1,6 +1,5 @@
 import { CONSTANTS } from '../constants';
-
-const SERVER_ERROR = 'ServerError';
+import { FetchError } from '../FetchError';
 
 export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0) {
   const requestData = async (): Promise<T> => {
@@ -8,10 +7,7 @@ export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0
       const response = await fetch(url, init);
 
       if (!response.ok) {
-        throw new Error(
-          `Error: status code is ${response.status}`,
-          response.status >= 500 ? { cause: SERVER_ERROR } : undefined,
-        );
+        throw new FetchError(`Error: status code is ${response.status}`, response.status);
       }
 
       if (response.status === 204) {
@@ -27,7 +23,8 @@ export function fetchRequest<T>(url: string, init: RequestInit = {}, attempt = 0
       }
 
       if (
-        ((error instanceof Error && error.cause === SERVER_ERROR) || error instanceof TypeError) &&
+        ((error instanceof Error && error.cause === CONSTANTS.SERVER_ERROR) ||
+          error instanceof TypeError) &&
         attempt < CONSTANTS.MAX_REFETCH_ATTEMPTS
       ) {
         const newAttemptCount = attempt + 1;
