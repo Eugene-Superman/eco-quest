@@ -7,11 +7,6 @@ export interface IUser {
   role: UserRole;
 }
 
-export interface UserAccessData {
-  user: IUser;
-  accessToken: string | null;
-}
-
 export interface UserState {
-  user: IUser | null;
+  user?: IUser;
 }

@@ -1,17 +1,9 @@
 import './styles/App.css';
-import AppRouter from './routes';
-import { useEffect } from 'react';
-import { refreshUserData } from '@/entities/user';
-import { useAppDispatch } from '@/shared/lib/hooks/redux';
+import { router } from './routes';
+import { RouterProvider } from 'react-router';
 
 function App() {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(refreshUserData());
-  }, []);
-
-  return <AppRouter />;
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -1,11 +1,12 @@
 import type { IUser, UserState } from '@/entities/user';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { refreshUserData } from './thunks';
+import { userStorage } from './userStorage';
 
-const initialState: UserState = {
-  user: null,
-};
+const emptyState: UserState = {};
+// Seed from the display cache so the Header renders the real user immediately,
+// before session restore resolves. Restore reconciles / overwrites it.
+const initialState: UserState = { user: userStorage.get() };
 
 export const userSlice = createSlice({
   name: 'user',
@@ -14,15 +15,10 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
-    resetAll: () => initialState,
-  },
-  extraReducers: (builder) => {
-    builder.addCase(refreshUserData.fulfilled, (state, action) => {
-      state.user = action.payload.user;
-    });
+    resetAll: () => emptyState,
   },
 });
 
-export const { setUser: setUserToStore, resetAll: resetAllUserStore } = userSlice.actions;
+export const { setUser: setUserToStore, resetAll: resetUserStore } = userSlice.actions;
 
 export default userSlice.reducer;

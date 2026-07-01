@@ -4,7 +4,7 @@ import type { ILoginForm } from './loginTypes';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../schema';
 import { authApi } from '../authApi';
-import useAuth from '../useAuth';
+import useAuth from '../hooks/useAuth';
 
 interface Props {
   onSubmitSuccess?: () => void;

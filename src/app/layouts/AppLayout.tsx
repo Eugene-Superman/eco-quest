@@ -1,8 +1,7 @@
 import { useAppSelector } from '@/shared/lib/hooks/redux';
-import { Footer } from './Footer';
-import { Header } from './Header';
 import { Outlet } from 'react-router';
-import NotificationList from '@/widgets/NotificationList/NotificationList';
+import useRestoreSession from '@/features/auth/hooks/useRestoreSession';
+import { Loader } from '@/shared/ui';
 
 function AdminLayout() {
   return (
@@ -36,31 +35,25 @@ function VisitorLayout() {
   );
 }
 
+// Wraps only the app area: restores the session, then renders the role layout.
+// Resolving identity before any role layout (and its <Outlet/>) mounts avoids the
+// undefined -> role swap that would remount the routed subtree.
 export default function AppLayout() {
+  const isSessionRestoring = useRestoreSession();
   const user = useAppSelector((state) => state.user.user);
-  const userRole = user?.role;
 
-  const getLayout = () => {
-    switch (userRole) {
-      case 'admin':
-        return <AdminLayout />;
-      case 'moderator':
-        return <ModeratorLayout />;
-      case 'participant':
-        return <ParticipantLayout />;
-      default:
-        return <VisitorLayout />;
-    }
-  };
+  if (isSessionRestoring) {
+    return <Loader />;
+  }
 
-  return (
-    <>
-      <Header userRole={userRole} />
-      <main>
-        {getLayout()}
-        <NotificationList />
-      </main>
-      <Footer />
-    </>
-  );
+  switch (user?.role) {
+    case 'admin':
+      return <AdminLayout />;
+    case 'moderator':
+      return <ModeratorLayout />;
+    case 'participant':
+      return <ParticipantLayout />;
+    default:
+      return <VisitorLayout />;
+  }
 }

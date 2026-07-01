@@ -4,7 +4,7 @@ import { InputField, type InputFieldProps } from '@/shared/lib/forms';
 import { signupSchema } from '../schema';
 import type { ISignupForm } from './signupTypes';
 import { authApi } from '../authApi';
-import useAuth from '../useAuth';
+import useAuth from '../hooks/useAuth';
 
 const fieldsList: InputFieldProps<ISignupForm>[] = [
   {

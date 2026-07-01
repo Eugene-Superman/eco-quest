@@ -1,6 +1,7 @@
 import { ROUTES } from '@/shared/config';
-import { createBrowserRouter, redirect, RouterProvider } from 'react-router';
+import { createBrowserRouter } from 'react-router';
 import AppLayout from '../layouts/AppLayout';
+import RootLayout from '../layouts/RootLayout';
 import {
   HomePage,
   LoginPage,
@@ -10,38 +11,46 @@ import {
   AdminPage,
   ForbiddenPage,
 } from '@/pages';
-import type { UserRole } from '@/entities/user';
-import { store } from '../providers/ReduxProvider/store';
 import ChallengesPage from '@/pages/challenges/catalog/ui/ChallengesPage';
 import DetailedPage from '@/pages/challenges/detailed/DetailedPage';
+import ProtectedRoute from './ProtectedRoute';
+import GuestRoute from './GuestRoute';
 
-function loadWithLimitedRoles(rolesWithAccess: UserRole[]) {
-  return function () {
-    const userRole = store.getState().user.user?.role;
-
-    if (!userRole || !rolesWithAccess.includes(userRole)) {
-      throw redirect(ROUTES.FORBIDDEN);
-    }
-  };
-}
-
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    // Shared chrome (Header/Footer) for every page — no session restore here
+    element: <RootLayout />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: ROUTES.LOGIN, element: <LoginPage /> },
-      { path: ROUTES.SIGN_UP, element: <SignupPage /> },
-      { path: ROUTES.DASHBOARD, element: <DashboardPage /> },
-      { path: ROUTES.CHALLENGES, element: <ChallengesPage /> },
-      { path: ROUTES.CHALLENGE_DETAILS(), element: <DetailedPage /> },
-      { path: ROUTES.ADMIN, element: <AdminPage />, loader: loadWithLimitedRoles(['admin']) },
-      { path: ROUTES.FORBIDDEN, element: <ForbiddenPage /> },
+      // Auth entry points — no session restore.
+      // GuestRoute bounces already-authenticated users back to home.
+      {
+        element: <GuestRoute />,
+        children: [
+          { path: ROUTES.LOGIN, element: <LoginPage /> },
+          { path: ROUTES.SIGN_UP, element: <SignupPage /> },
+        ],
+      },
+
+      // App area — restores the session, then picks the role layout (<Outlet/> lives inside it)
+      {
+        element: <AppLayout />,
+        children: [
+          { index: true, element: <HomePage /> },
+          { path: ROUTES.CHALLENGES, element: <ChallengesPage /> },
+          { path: ROUTES.CHALLENGE_DETAILS(), element: <DetailedPage /> },
+          { path: ROUTES.FORBIDDEN, element: <ForbiddenPage /> },
+          { path: ROUTES.DASHBOARD, element: <DashboardPage /> },
+
+          // Role-guarded subtree
+          {
+            element: <ProtectedRoute allowedRoles={['admin']} />,
+            children: [{ path: ROUTES.ADMIN, element: <AdminPage /> }],
+          },
+        ],
+      },
+
+      // 404 — shares the chrome, no restore
       { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]);
-
-export default function AppRouter() {
-  return <RouterProvider router={router} />;
-}

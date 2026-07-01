@@ -1,7 +1,9 @@
+import type { UserAccessData } from '@/features/auth/auth.types';
 import { ROUTES } from '../config';
 import { accessTokenProvider } from './accessTokenProvider';
 import { fetchRequest } from './fetch/fetchRequest';
 import { FetchError } from './FetchError';
+import type { IUser } from '@/entities/user';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -20,24 +22,28 @@ const getAuthorizationHeaders = (init: RequestInit, auth: boolean) => {
   return headers;
 };
 
-let refreshPromise: Promise<boolean> | null = null;
+let refreshPromise: Promise<IUser | null> | null = null;
 
-const refresh = async () => {
+export const refreshRequest = async () => {
   if (!refreshPromise) {
-    refreshPromise = fetchRequest<string | undefined>(`${API_URL}/refresh`)
-      .then((token) => {
-        if (token) {
-          accessTokenProvider.setToken(token);
-          return true;
+    refreshPromise = http
+      .post<UserAccessData | null, {}>('auth/refresh', {}, {}, false)
+      .then((userAccessData) => {
+        if (!userAccessData) {
+          return null;
         }
 
-        return false;
+        const { accessToken, ...userData } = userAccessData;
+
+        accessTokenProvider.setToken(accessToken);
+        return userData;
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        // Failed refresh means there is no valid session. Resolve to "guest"
+        // silently — the caller decides the policy (restore -> guest renders,
+        // 401 interceptor -> redirect to login).
         accessTokenProvider.clear();
-        window.location.href = ROUTES.LOGIN;
-        return false;
+        return null;
       })
       .finally(() => {
         refreshPromise = null;
@@ -58,10 +64,12 @@ const requestData = async <T>(url: string, init: RequestInit = {}, auth = true) 
     return await doRequest();
   } catch (error) {
     if (auth && error instanceof FetchError && error.status === 401) {
-      const isRefreshed = await refresh();
-      if (isRefreshed) {
+      const refreshedUserData = await refreshRequest();
+      if (refreshedUserData) {
         return doRequest();
       }
+      // Mid-session request failed and the session can't be refreshed -> it's dead.
+      window.location.href = ROUTES.LOGIN;
     }
 
     throw error;
@@ -77,6 +85,7 @@ export const http = {
       url,
       {
         ...init,
+        credentials: 'include',
         headers: {
           ...init.headers,
           'Content-Type': 'application/json',

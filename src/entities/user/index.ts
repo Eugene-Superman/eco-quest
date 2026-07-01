@@ -1,3 +1,4 @@
 export * from './model/userTypes';
-export * from './model/thunks';
-export { default as userReducer, setUserToStore, resetAllUserStore } from './model/userSlice';
+export { default as userReducer, setUserToStore, resetUserStore } from './model/userSlice';
+export { userPersistMiddleware } from './model/userPersistMiddleware';
+export { userStorage } from './model/userStorage';

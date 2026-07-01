@@ -1,7 +1,7 @@
-import { setUserToStore, type UserAccessData } from '@/entities/user';
-import { accessTokenProvider } from '@/shared/api';
+import { setUserToStore } from '@/entities/user';
 import useMutationRequest from '@/shared/api/hooks/useMutationRequest';
 import { useAppDispatch } from '@/shared/lib/hooks/redux';
+import type { UserAccessData } from '../auth.types';
 
 export default function useAuth<TRequest extends object, TResponse extends UserAccessData>(
   requestFn: (data: TRequest) => Promise<TResponse>,
@@ -10,14 +10,9 @@ export default function useAuth<TRequest extends object, TResponse extends UserA
   const dispatch = useAppDispatch();
 
   const saveUserData = (accessData: TResponse) => {
-    dispatch(setUserToStore(accessData.user));
-
-    if (accessData.accessToken) {
-      accessTokenProvider.setToken(accessData.accessToken);
-    }
-
+    dispatch(setUserToStore(accessData));
     onSubmitSuccess?.(accessData);
   };
 
-  return useMutationRequest(requestFn, saveUserData);
+  return useMutationRequest(requestFn, { onSuccess: saveUserData });
 }

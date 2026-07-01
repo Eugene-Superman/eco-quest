@@ -1,38 +1,49 @@
-import type { UserRole } from '@/entities/user';
+import type { IUser, UserRole } from '@/entities/user';
+import useLogout from '@/features/auth/hooks/useLogout';
 import logo from '@/shared/assets/react.svg';
 import { ROUTES } from '@/shared/config';
 import { Link } from 'react-router';
 
+type NavItem = { path: string; title: string };
+
 const home = { path: ROUTES.HOME, title: 'Home' };
 const challenges = { path: ROUTES.CHALLENGES, title: 'Challenges' };
 
-const navItems = {
+const guestNavItems: NavItem[] = [
+  home,
+  { path: ROUTES.LOGIN, title: 'Login' },
+  { path: ROUTES.SIGN_UP, title: 'Sign Up' },
+];
+
+const navItems: Partial<Record<UserRole, NavItem[]>> = {
   admin: [home, challenges],
   moderator: [home, challenges],
   participant: [home, challenges],
-  visitor: [
-    { path: ROUTES.LOGIN, title: 'Login' },
-    { path: ROUTES.SIGN_UP, title: 'Sign Up' },
-    challenges,
-  ],
 };
 
 interface Props {
-  userRole?: UserRole;
+  user?: IUser;
 }
 
-export function Header({ userRole }: Props) {
+export function Header({ user }: Props) {
+  const { isLoggingOut, logout } = useLogout();
+  const navList = (user && navItems[user.role]) || guestNavItems;
+
   return (
     <header>
       <img src={logo} alt="Logo" />
-      {!!userRole && (
-        <nav>
-          {navItems[userRole].map((nav, i) => (
-            <Link key={i} to={nav.path}>
-              {nav.title}
-            </Link>
-          ))}
-        </nav>
+      <p>Hello, {user?.nickname || 'Guest'}</p>
+      <nav>
+        {navList.map((nav, i) => (
+          <Link key={i} to={nav.path}>
+            {nav.title}
+          </Link>
+        ))}
+      </nav>
+      {!!user && (
+        <button disabled={isLoggingOut} onClick={logout}>
+          Logout
+        </button>
       )}
     </header>
   );
