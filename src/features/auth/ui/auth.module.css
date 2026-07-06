@@ -1,0 +1,49 @@
+/* Shared styles for the auth screens (login / signup): the centered card and the
+   vertical form stack inside it. */
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--space-8);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-8);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  text-align: center;
+}
+
+.subtitle {
+  margin-top: var(--space-2);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Vertical stack of fields + submit; used by LoginForm / SignupForm */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.footer {
+  margin-top: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.footer a {
+  font-weight: var(--font-semibold);
+}

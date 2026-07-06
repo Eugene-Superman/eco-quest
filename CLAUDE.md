@@ -35,6 +35,15 @@ Each slice exposes a public API through an `index.ts` barrel — always import f
 
 The `@` alias resolves to `src/`, configured in both [vite.config.ts](vite.config.ts) and [tsconfig.app.json](tsconfig.app.json).
 
+## Styling & Design
+
+The visual language and styling rules live in [DESIGN.md](DESIGN.md) — read it before writing any UI. In short:
+
+- **CSS Modules + design tokens.** A component that owns a 1:1 style module lives in its own folder with a barrel `index.ts` (`Button/{Button.tsx, Button.module.css, index.ts}`); components without a module and shared stylesheets stay flat. The only global CSS is in `src/app/styles/` (`tokens.css`, `reset.css`, `index.css`).
+- **Never hardcode** colors/spacing/radius/font — always use a **semantic** token (`var(--color-primary)`, `var(--text-muted)`, `var(--space-4)`), never a primitive (`--green-600`) directly. All tokens are defined in [tokens.css](src/app/styles/tokens.css).
+- Compose class names with `clsx` (object form for conditionals): `clsx(styles.link, { [styles.active]: isActive })`.
+- Direction: fresh & playful (gamified eco app), **light theme only** for now — tokens are split primitive/semantic so a dark theme can be added later by remapping the semantic layer under `[data-theme='dark']`.
+
 ## HTTP / API Layer (`src/shared/api/`)
 
 All network calls go through `http` ([src/shared/api/http.ts](src/shared/api/http.ts)), which wraps `fetchRequest` ([src/shared/api/fetch/fetchRequest.ts](src/shared/api/fetch/fetchRequest.ts)).
@@ -77,7 +86,7 @@ Use typed hooks from `src/shared/lib/hooks/redux.ts` (`useAppDispatch`, `useAppS
 
 Routes ([src/app/routes/index.tsx](src/app/routes/index.tsx)) use React Router v7 object config (`createBrowserRouter`). Layout and access control are done with **components**, not loaders:
 
-- `RootLayout` ([src/app/layouts/RootLayout.tsx](src/app/layouts/RootLayout.tsx)) — root shell (`Header`/`Footer`/`NotificationList`) around **every** page; no session restore.
+- `RootLayout` ([src/app/layouts/RootLayout/RootLayout.tsx](src/app/layouts/RootLayout/RootLayout.tsx)) — root shell (`Header`/`Footer`/`NotificationList`) around **every** page; no session restore.
 - `AppLayout` ([src/app/layouts/AppLayout.tsx](src/app/layouts/AppLayout.tsx)) — wraps only the app area. Runs `useRestoreSession` (renders `Loader` until it resolves), then picks the role layout. Resolving the role **before** the role layout (and its `<Outlet/>`) mounts avoids an `undefined -> role` swap that would remount the routed subtree and re-fire restore.
 - `GuestRoute` ([src/app/routes/GuestRoute.tsx](src/app/routes/GuestRoute.tsx)) — wraps `/login` and `/signup`; redirects already-authenticated users to home.
 - `ProtectedRoute` ([src/app/routes/ProtectedRoute.tsx](src/app/routes/ProtectedRoute.tsx)) — `allowedRoles?` guard; redirects to `/login` (no user) or `/forbidden` (wrong role).

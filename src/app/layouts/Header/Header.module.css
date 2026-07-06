@@ -1,0 +1,112 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  height: var(--header-height);
+}
+
+/* Nav takes the free space between logo and actions */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-right: auto;
+}
+
+.navLink {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-medium);
+  color: var(--text-body);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.navLinkActive,
+.navLinkActive:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  font-weight: var(--font-semibold);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.greeting {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.greeting strong {
+  color: var(--text-heading);
+  font-weight: var(--font-semibold);
+}
+
+/* Ghost button — logout / login */
+.logout,
+.loginLink {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-medium);
+  color: var(--text-body);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.logout:hover:not(:disabled),
+.loginLink:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.logout:disabled {
+  opacity: 0.6;
+}
+
+/* Solid primary — sign up */
+.signupBtn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-semibold);
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+  transition: background-color var(--transition-fast);
+}
+
+.signupBtn:hover {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary-hover);
+}
+
+@media (max-width: 560px) {
+  .greeting {
+    display: none;
+  }
+
+  .inner {
+    gap: var(--space-3);
+  }
+}

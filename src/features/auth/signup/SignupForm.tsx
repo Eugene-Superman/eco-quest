@@ -1,10 +1,12 @@
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField, type InputFieldProps } from '@/shared/lib/forms';
+import { Button } from '@/shared/ui';
 import { signupSchema } from '../schema';
 import type { ISignupForm } from './signupTypes';
 import { authApi } from '../authApi';
 import useAuth from '../hooks/useAuth';
+import styles from '../ui/auth.module.css';
 
 const fieldsList: InputFieldProps<ISignupForm>[] = [
   {
@@ -49,13 +51,13 @@ export default function SignupForm({ onSubmitSuccess }: Props) {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={methods.handleSubmit(onSubmit)}>
         {fieldsList.map((field) => (
           <InputField key={field.name} {...field} disabled={isLoading} />
         ))}
-        <button type="submit" disabled={isLoading}>
-          Submit
-        </button>
+        <Button type="submit" fullWidth disabled={isLoading}>
+          {isLoading ? 'Creating account…' : 'Create account'}
+        </Button>
       </form>
     </FormProvider>
   );

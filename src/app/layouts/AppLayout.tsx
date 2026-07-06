@@ -1,38 +1,28 @@
 import { useAppSelector } from '@/shared/lib/hooks/redux';
 import { Outlet } from 'react-router';
 import useRestoreSession from '@/features/auth/hooks/useRestoreSession';
-import { Loader } from '@/shared/ui';
+import { Container, Loader } from '@/shared/ui';
+
+// Shared content shell for the app area. Role-specific chrome (e.g. an admin
+// sidebar) can be layered on per role below.
+function AppShell({ children }: { children?: React.ReactNode }) {
+  return <Container as="section">{children ?? <Outlet />}</Container>;
+}
 
 function AdminLayout() {
-  return (
-    <div>
-      <h1>Admin Layout</h1> <Outlet />
-    </div>
-  );
+  return <AppShell />;
 }
 
 function ModeratorLayout() {
-  return (
-    <div>
-      <h1>Moderator Layout</h1> <Outlet />
-    </div>
-  );
+  return <AppShell />;
 }
 
 function ParticipantLayout() {
-  return (
-    <div>
-      <h1>Participant Layout</h1> <Outlet />
-    </div>
-  );
+  return <AppShell />;
 }
 
 function VisitorLayout() {
-  return (
-    <div>
-      <h1>Visitor Layout</h1> <Outlet />
-    </div>
-  );
+  return <AppShell />;
 }
 
 // Wraps only the app area: restores the session, then renders the role layout.
