@@ -107,6 +107,8 @@ All route paths are constants in `src/shared/config/routes.ts` — always use `R
 
 Tests use Vitest + jsdom + Testing Library. Setup file: `src/shared/config/tests.ts` (imports `@testing-library/jest-dom`). Vitest globals (`describe`, `it`, `expect`, `vi`) are available without imports.
 
+Test files sit flat, co-located next to the source they test (`userSlice.ts` + `userSlice.test.ts` in the same folder — they cluster in `model/` because that's where the logic lives). Use a `tests/` subfolder only when a test needs companion mocks/fixtures (as `SocketClient` does with `MockWebSocket.ts`).
+
 Use `muteConsole()` from `src/shared/lib/test` to suppress expected console output in tests that intentionally trigger errors/warnings.
 
 ## Environment Variables
