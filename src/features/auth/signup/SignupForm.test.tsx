@@ -1,10 +1,6 @@
-import type { PropsWithChildren } from 'react';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { notificationReducer } from '@/entities/notifications';
-import { userReducer } from '@/entities/user';
+import { storeWrapper } from '@/shared/lib/test';
 import { authApi } from '../authApi';
 import type { UserAccessData } from '../auth.types';
 import SignupForm from './SignupForm';
@@ -17,12 +13,7 @@ const accessData: UserAccessData = {
 };
 
 const renderForm = () => {
-  const store = configureStore({
-    reducer: { user: userReducer, notifications: notificationReducer },
-  });
-  const wrapper = ({ children }: PropsWithChildren) => (
-    <Provider store={store}>{children}</Provider>
-  );
+  const { store, wrapper } = storeWrapper();
   return { store, ...render(<SignupForm />, { wrapper }) };
 };
 

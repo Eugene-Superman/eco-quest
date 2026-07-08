@@ -1,33 +1,17 @@
-import type { PropsWithChildren } from 'react';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
 import { act, renderHook } from '@testing-library/react';
-import { notificationReducer } from '@/entities/notifications';
-import { userReducer } from '@/entities/user';
-import { muteConsole } from '@/shared/lib/test';
+import { muteConsole, storeWrapper } from '@/shared/lib/test';
 import useMutationRequest from './useMutationRequest';
-
-// Fresh store per test + a Provider wrapper, since the hook uses useAppDispatch.
-const setup = () => {
-  const store = configureStore({
-    reducer: { user: userReducer, notifications: notificationReducer },
-  });
-  const wrapper = ({ children }: PropsWithChildren) => (
-    <Provider store={store}>{children}</Provider>
-  );
-  return { store, wrapper };
-};
 
 describe('useMutationRequest', () => {
   it('starts idle', () => {
-    const { wrapper } = setup();
+    const { wrapper } = storeWrapper();
     const { result } = renderHook(() => useMutationRequest(vi.fn()), { wrapper });
 
     expect(result.current.isLoading).toBe(false);
   });
 
   it('on success: shows loading, then calls onSuccess and settles', async () => {
-    const { wrapper } = setup();
+    const { wrapper } = storeWrapper();
     const requestFn = vi.fn().mockResolvedValue({ id: 1 });
     const onSuccess = vi.fn();
     const onSettled = vi.fn();
@@ -55,7 +39,7 @@ describe('useMutationRequest', () => {
 
   it('on error: dispatches an error notification, calls onError and onSettled', async () => {
     const restore = muteConsole();
-    const { wrapper, store } = setup();
+    const { wrapper, store } = storeWrapper();
     const requestFn = vi.fn().mockRejectedValue(new Error('Nope'));
     const onError = vi.fn();
     const onSettled = vi.fn();

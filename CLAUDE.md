@@ -109,7 +109,7 @@ All route paths are constants in `src/shared/config/routes.ts` — always use `R
 
 Tests use Vitest + jsdom + Testing Library. Setup file: `src/shared/config/tests.ts` (imports `@testing-library/jest-dom`). Vitest globals (`describe`, `it`, `expect`, `vi`) are available without imports — their types (plus jest-dom matchers like `toBeInTheDocument`) come from `tsconfig.app.json` `types`: `vitest/globals` + `@testing-library/jest-dom`.
 
-Hooks/components that use Redux are rendered with an inline `<Provider>` wrapper over a per-test `configureStore` (kept inline and self-contained rather than a shared helper); assert on dispatched results by reading the store state, not by mocking `dispatch`.
+Hooks/components that use Redux are rendered via `storeWrapper()` from `src/shared/lib/test` — it returns `{ store, wrapper }` (a fresh `user` + `notifications` store, no persist middleware) for `render`/`renderHook`. Assert on dispatched results by reading the store state, not by mocking `dispatch`.
 
 Test files sit flat, co-located next to the source they test (`userSlice.ts` + `userSlice.test.ts` in the same folder — they cluster in `model/` because that's where the logic lives). Use a `tests/` subfolder only when a test needs companion mocks/fixtures (as `SocketClient` does with `MockWebSocket.ts`).
 

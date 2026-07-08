@@ -1,9 +1,5 @@
-import type { PropsWithChildren } from 'react';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
 import { act, renderHook } from '@testing-library/react';
-import { notificationReducer } from '@/entities/notifications';
-import { userReducer } from '@/entities/user';
+import { storeWrapper } from '@/shared/lib/test';
 import type { UserAccessData } from '../auth.types';
 import useAuth from './useAuth';
 
@@ -14,19 +10,9 @@ const accessData: UserAccessData = {
   accessToken: 'token-123',
 };
 
-const setup = () => {
-  const store = configureStore({
-    reducer: { user: userReducer, notifications: notificationReducer },
-  });
-  const wrapper = ({ children }: PropsWithChildren) => (
-    <Provider store={store}>{children}</Provider>
-  );
-  return { store, wrapper };
-};
-
 describe('useAuth', () => {
   it('saves the returned user to the store on success', async () => {
-    const { store, wrapper } = setup();
+    const { store, wrapper } = storeWrapper();
     const signin = vi.fn().mockResolvedValue(accessData);
 
     const { result } = renderHook(() => useAuth(signin), { wrapper });
@@ -39,7 +25,7 @@ describe('useAuth', () => {
   });
 
   it('forwards the response to onSubmitSuccess', async () => {
-    const { wrapper } = setup();
+    const { wrapper } = storeWrapper();
     const signin = vi.fn().mockResolvedValue(accessData);
     const onSubmitSuccess = vi.fn();
 
