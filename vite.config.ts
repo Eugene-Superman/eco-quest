@@ -9,6 +9,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/shared/config/tests.ts',
+    // Keep Vitest to unit/integration tests in src; E2E specs live in e2e/ and run on Playwright.
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
   plugins: [react()],
   resolve: {

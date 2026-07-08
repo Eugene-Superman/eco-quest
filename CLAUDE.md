@@ -115,6 +115,14 @@ Test files sit flat, co-located next to the source they test (`userSlice.ts` + `
 
 Use `muteConsole()` from `src/shared/lib/test` to suppress expected console output in tests that intentionally trigger errors/warnings.
 
+Vitest is scoped to `src` (`include: ['src/**/*.{test,spec}.{ts,tsx}']`) so it never picks up the Playwright specs.
+
+### E2E (Playwright)
+
+End-to-end tests are **black-box** and live outside `src` in `e2e/` ([playwright.config.ts](playwright.config.ts)); run them with `npm run test:e2e`. They cover full user journeys through the real app (routing, guards, store, redirects) across chromium/firefox/webkit — not component logic, which the Vitest layer already owns.
+
+The backend is mocked at the network boundary via `page.route` in [e2e/fixtures.ts](e2e/fixtures.ts) (`mockAuth(page)` — call it before `page.goto`), so E2E runs deterministically without a server. `/auth/refresh` is mocked too, so landing in the app area (which restores the session on mount) keeps the user logged in. `e2e/` has its own `tsconfig.json` (Playwright types, not Vitest).
+
 ## Environment Variables
 
 `VITE_API_URL` — base URL for all API calls. Set in `.env.development` for local development.
