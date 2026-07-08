@@ -26,7 +26,7 @@ export default function LoginForm({ onSubmitSuccess }: Props) {
 
   return (
     <FormProvider {...methods}>
-      <form className={styles.form} onSubmit={methods.handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={methods.handleSubmit(onSubmit)} noValidate>
         <InputField
           label="Email"
           name="email"

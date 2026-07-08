@@ -14,19 +14,22 @@ const fieldsList: InputFieldProps<ISignupForm>[] = [
     name: 'email',
     type: 'email',
     autoComplete: 'email',
+    placeholder: 'you@example.com',
   },
-  { label: 'Nickname', name: 'nickname' },
-  { label: 'Full Name', name: 'fullname' },
+  { label: 'Nickname', name: 'nickname', placeholder: 'eco_hero' },
+  { label: 'Full Name', name: 'fullname', placeholder: 'Jane Green' },
   {
     label: 'Password',
     name: 'password',
     type: 'password',
     autoComplete: 'new-password',
+    placeholder: '••••••••',
   },
   {
     label: 'Repeat Password',
     name: 'repeatPassword',
     type: 'password',
+    placeholder: '••••••••',
   },
 ];
 
@@ -51,7 +54,7 @@ export default function SignupForm({ onSubmitSuccess }: Props) {
 
   return (
     <FormProvider {...methods}>
-      <form className={styles.form} onSubmit={methods.handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={methods.handleSubmit(onSubmit)} noValidate>
         {fieldsList.map((field) => (
           <InputField key={field.name} {...field} disabled={isLoading} />
         ))}

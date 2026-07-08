@@ -1,5 +1,5 @@
 import { muteConsole } from '@/shared/lib/test';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MockWebSocket } from './MockWebSocket';
 import { SocketClient } from '../SocketClient';
 import { CONSTANTS } from '../../constants';

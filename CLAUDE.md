@@ -69,6 +69,8 @@ Auth hooks live under `src/features/auth/hooks/`:
 - **Session restore on boot** — `useRestoreSession` ([useRestoreSession.tsx](src/features/auth/hooks/useRestoreSession.tsx)) calls `refreshRequest()` (which sets the token and returns the user), then dispatches `setUserToStore` on success or `resetUserStore` on `null`. It runs **only inside the app area** (see Routing) — never on `/login`, `/signup`, or 404.
 - **Logout** — `useLogout` ([useLogout.tsx](src/features/auth/hooks/useLogout.tsx)) clears the token + display cache, then does a full `window.location.replace(ROUTES.LOGIN)` to nuke all in-memory state.
 
+**Forms:** `LoginForm` / `SignupForm` use `react-hook-form` with a yup resolver ([schema.ts](src/features/auth/schema.ts)) and render `<form noValidate>` so **all** validation flows through yup — native `required`/`type` attributes stay for a11y but never preempt submit. `SignupForm` strips `repeatPassword` before calling `authApi.signup`.
+
 **Display cache:** `userStorage` ([src/entities/user/model/userStorage.ts](src/entities/user/model/userStorage.ts)) persists only non-sensitive display fields (`nickname`, `role`, `fullname`, `email`) to `localStorage` — never the token. It seeds `userSlice` `initialState` so the `Header` shows the real user immediately (no guest flash) before restore resolves; `userPersistMiddleware` keeps it in sync (write on `setUserToStore`, clear on `resetUserStore`); `useLogout` clears it explicitly before the reload.
 
 `UserAccessData` (`src/features/auth/auth.types.ts`) extends `IUser` with `accessToken`.
@@ -105,7 +107,9 @@ All route paths are constants in `src/shared/config/routes.ts` — always use `R
 
 ## Testing
 
-Tests use Vitest + jsdom + Testing Library. Setup file: `src/shared/config/tests.ts` (imports `@testing-library/jest-dom`). Vitest globals (`describe`, `it`, `expect`, `vi`) are available without imports.
+Tests use Vitest + jsdom + Testing Library. Setup file: `src/shared/config/tests.ts` (imports `@testing-library/jest-dom`). Vitest globals (`describe`, `it`, `expect`, `vi`) are available without imports — their types (plus jest-dom matchers like `toBeInTheDocument`) come from `tsconfig.app.json` `types`: `vitest/globals` + `@testing-library/jest-dom`.
+
+Hooks/components that use Redux are rendered with an inline `<Provider>` wrapper over a per-test `configureStore` (kept inline and self-contained rather than a shared helper); assert on dispatched results by reading the store state, not by mocking `dispatch`.
 
 Test files sit flat, co-located next to the source they test (`userSlice.ts` + `userSlice.test.ts` in the same folder — they cluster in `model/` because that's where the logic lives). Use a `tests/` subfolder only when a test needs companion mocks/fixtures (as `SocketClient` does with `MockWebSocket.ts`).
 
